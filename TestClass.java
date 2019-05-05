@@ -1,56 +1,54 @@
 public class TestClass {
-    public int findKth(int[] nums, int k) {
-      int start = 0, end = nums.length - 1, index = nums.length - k;
-      while (start < end) {
-        int pivot = partion(nums, start, end);
-        if (pivot < index) start = pivot + 1; 
-          else if (pivot > index) end = pivot - 1;
-          else return nums[pivot];
+    public int findK_High_Low(int[] myArray, int k) {
+      int low = 0, high = myArray.length - 1, position = myArray.length - k;
+      while (low < high) {
+        int pivot = partion(myArray, low, high);
+        if (pivot < position){
+			low = pivot + 1;
+		}
+          else if (pivot > position){
+			  high = pivot - 1;
+		  }
+          else return myArray[pivot];
       }
-      return nums[start];
+      return myArray[low];
     }
-    public int partion(int[] nums, int start, int end) {
-      int pivot = start, temp;
-      while (start <= end) {
-        while (start <= end && nums[start] <= nums[pivot]) start++;
-        while (start <= end && nums[end] > nums[pivot]) end--;
-          if (start > end) break;
-            temp = nums[start];
-            nums[start] = nums[end];
-            nums[end] = temp;
+    public int partion(int[] myArray, int low, int high) {
+      int pivot = low, temp;
+      while (low <= high) {
+        while (low <= high && myArray[low] <= myArray[pivot]) low++;
+        while (low <= high && myArray[high] > myArray[pivot]) high--;
+          if (low > high) break;
+            temp = myArray[low];
+			myArray[low] = myArray[high];
+            myArray[high] = temp;
       }
-      temp = nums[end];
-      nums[end] = nums[pivot];
-      nums[pivot] = temp;
-      return end;
+      temp = myArray[high];
+      myArray[high] = myArray[pivot];
+      myArray[pivot] = temp;
+      return high;
     }
-    public int[] largest(int[] arr, int kth, int K) { 
-      int[] largest = new int[K];
-      for (int i = 0, e = 0; i < arr.length; i++) {
-        if (arr[i] >= kth) {
-          largest[e] = arr[i];
-          e++;
+    public int[] largest_Values(int[] myArray, int k_highest, int K) { 
+      int[] largest_k_values = new int[K];
+	  int  j = 0;
+      for (int i = 0; i < myArray.length; i++) {
+        if (myArray[i] >= k_highest) {
+          largest_k_values[j] = myArray[i];
+         j++;
         }
       }
-      return largest;
+      return largest_k_values;
     }
-    public int[] smallest(int[] arr, int kth, int K) { 
-      int[] smallest = new int[K];
-      for (int i = 0, e = K-1; i < arr.length; i++) {
-        if (arr[i] <= kth) {
-          smallest[e] = arr[i];
-          e--;
+    public int[] smallest_Values(int[] myArray, int k_Smallest, int K) { 
+      int[] smallest_k_values = new int[K];
+	  int j = K-1;
+      for (int i = 0; i < myArray.length-1; i++) {
+        if (myArray[i] <= k_Smallest) {
+          smallest_k_values[j] = myArray[i];
+          j--;
         }
       }
-      return smallest;
-    }
-    public int XORsum(int[] smallest, int[] largest, int K) {
-      int sum = 0;
-      for (int i = 0; i < K; i++) {
-        sum ^= smallest[i];
-        sum ^= largest[i];
-      }
-      return sum;
+      return smallest_k_values;
     }
 	public static boolean checkOrdered(int[] arr) {
 		boolean myFlag = false;
@@ -60,9 +58,9 @@ public class TestClass {
 			}
 			else return false;
 		}
-	return myFlag;
-			
+		return myFlag;
 	}
+	
 	public static boolean checkOrder(int[] arr) {
 		boolean myFlag = false;
 		for (int i = 1; i < arr.length; i++) {
@@ -70,54 +68,51 @@ public class TestClass {
 				myFlag = true;
 		}
 		else return false;
-	}
-	return myFlag;
-	}
-	public static int nextIndex(int max , int last,int offset,int len){
-    last = (last * max + offset ) % len ;
-    return last % max;
-}
-	public static void main(String[] args) throws Exception {
-	
-    int K = Integer.parseInt(args[0]);
-    int myArray[] = FastRead.FastReadArray(args[1]);
-	//System.out.println(arr.length);
-    Stopwatch st = new Stopwatch();
-	
-	int max = myArray.length;
-	int len = myArray.length;
-	int offset = 1 ; 
-	int last = (int) (System.currentTimeMillis() % max);
-	boolean isUp = checkOrdered(myArray);
-	boolean isDown = checkOrder(myArray);
-	
-	System.out.println(isDown + " " + isUp); 
-	
-	if (isUp == true || isDown == true) {
-      for (int i = 0; i < myArray.length; i++) {
-		int myIndex = nextIndex(max++,last,offset++,len);
-		if(myIndex < 0){
-			myIndex = myIndex*-1;
 		}
+		return myFlag;
+	}
+    public int XORsum(int[] smallest_k_values, int[] largest_k_values, int K) {
+      int sum = 0;
+      for (int i = 0; i < K; i++) {
+        sum ^= smallest_k_values[i];
+        sum ^= largest_k_values[i];
+      }
+      return sum;
+    }
+	public static int nextIndex(int max , int last,int offset,int len){
+		last = (last * max + offset ) % len ;
+		return last % max;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		TestClass TC = new TestClass();
+		int K = Integer.parseInt(args[0]);
+		int myArray[] = FastRead.FastReadArray(args[1]); 
+		Stopwatch st = new Stopwatch();
+		int max = myArray.length;
+		int len = myArray.length;
+		int offset = 1 ; 
+		int last = (int) (System.currentTimeMillis() % max);
+		boolean isUp = checkOrdered(myArray);
+		boolean isDown = checkOrder(myArray);
+	 
+		if (isUp == true || isDown == true) {
+			for (int i = 0; i < myArray.length; i++) {
+				int myIndex = nextIndex(max++,last,offset++,len);
+				if(myIndex < 0){
+					myIndex = myIndex*-1;
+				}
         int temp = myArray[i];
 		myArray[i] = myArray[myIndex];
 		myArray[myIndex] = temp;
-    }  
-    }
-	
-	//for (int i = 0; i < arr.length; i++) {
-	  //System.out.println(arr[i]);
-	//}
-   
-      TestClass g = new TestClass(); 
-      int kth = g.findKth(myArray, K);
-      int kth2 = g.findKth(myArray, myArray.length-K+1);
-      int[] largest = g.largest(myArray, kth, K);
-      int[] smallest = g.smallest(myArray, kth2, K);
-      System.out.println(g.XORsum(smallest, largest, K)); 
-
+			}  
+		} 
+      int kHigh = TC.findK_High_Low(myArray, K);
+      int kLow = TC.findK_High_Low(myArray, myArray.length-K+1);
+	  int[] l_vals = TC.largest_Values(myArray, kHigh, K);
+      int[] s_vals = TC.smallest_Values(myArray, kLow, K);
+      System.out.println(TC.XORsum(s_vals, l_vals, K)); 
       double time = st.elapsedTime();
       System.err.println("Elapsed Time: "+time+" s");
-	  
-  }
+    }
 }
